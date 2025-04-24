@@ -19,7 +19,7 @@ function Contact() {
     <section className="py-12 bg-white">
       <div className="container flex flex-wrap gap-10 mx-auto lg:flex-nowrap">
         {/* Left Section - Contact Info */}
-        <div className="w-full p-8 text-white bg-blue-600 rounded-lg lg:w-1/3">
+        <div className="w-full p-8 text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg lg:w-1/3">
           <h3 className="mb-4 text-2xl font-bold">Contact Information</h3>
           <p className="mb-6 text-sm">
             Nullam varius, erat quis iaculis dictum, eros urna varius eros, ut blandit felis odio in turpis.

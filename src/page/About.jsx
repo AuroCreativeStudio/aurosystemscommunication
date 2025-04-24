@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import Image1 from "../assets/image4.jpg";
 import Image2 from "../assets/image3.jpg";
 import Image3 from "../assets/image1.jpg";
 import Image4 from "../assets/image2.jpg";
+import { motion }from "framer-motion";
 import { Pagination, Navigation } from "swiper/modules";
 import { FaGlobe, FaAndroid, FaApple, FaTv, FaRobot, FaClock } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -64,50 +66,106 @@ function About() {
       </section>
 
       {/* Our Offerings Section */}
-      <section className='mb-28'>
-        <div className="relative bg-gradient-to-b py-16 from-[#0A0F1D] to-[#05080F] text-white text-center">
-          <h2 className="text-3xl font-bold">Enhance And Pioneer Using Technology Trends</h2>
-          <button className="mt-4 px-6 py-3 bg-blue-600 rounded-lg">Explore More</button>
-          <div className="grid grid-cols-2 gap-4 mt-12 sm:grid-cols-3 md:grid-cols-6">
-            {offerings.map((item, index) => (
-              <div key={index} className="p-6 rounded-lg bg-[#111827] hover:bg-blue-500">
-                <div className="text-3xl text-blue-400">{item.icon}</div>
-                <span className="font-semibold">{item.label}</span>
-              </div>
+      <section>
+      {/* Main Section */}
+      <div className="relative bg-gradient-to-b py-16 mt-10 px-6 md:px-12 from-[#0A0F1D] to-[#05080F] text-white">
+        <div className="max-w-6xl mx-auto text-center px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-44">
+            <h2 className="text-2xl md:text-4xl font-bold text-center md:text-left">
+              Enhance And Pioneer Using Technology Trends
+            </h2>
+            <button className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-blue-500 to-indigo-600 hover:bg-blue-600 text-white rounded-lg flex items-center space-x-2 transition">
+              <span>Explore More</span>
+            </button>
+          </div>
+
+          {/* Offerings Grid */}
+          <div className="mt-12 mb-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      {offerings.map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: 50, opacity: 0 }} // Start hidden & below
+          whileInView={{ y: 0, opacity: 1 }} // Animate when in view
+          viewport={{ once: true, amount: 0.2 }} // Only animate once when 20% is visible
+          transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }} // Stagger effect
+          className="flex flex-col items-center justify-center bg-[#111827] p-6 rounded-lg hover:bg-blue-500 transition text-center"
+        >
+          <div className="text-3xl text-blue-400 mb-2">{item.icon}</div>
+          <span className="text-white font-semibold">{item.label}</span>
+        </motion.div>
+      ))}
+    </div>
+        </div>
+      </div>
+
+      {/* Scrolling Image Section */}
+      <div className="relative -mt-10 max-w-5xl mx-auto bg-gradient-to-r from-blue-500 to-indigo-600 py-8 px-4 text-center rounded-lg shadow-lg overflow-hidden">
+        <div className="w-full overflow-hidden whitespace-nowrap">
+          <div className="flex gap-12 animate-marquee">
+            {[1, 2, 3, 4, 5, 6].map((num) => (
+              <img
+                key={num}
+                src={`/images/tech${num}.png`}
+                alt={`Tech ${num}`}
+                className="h-16 md:h-20 w-auto object-contain"
+              />
             ))}
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Tailwind Keyframes for Smooth Scrolling */}
+      <style>
+        {`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            80% { transform: translateX(-50%); } 
+            100% { transform: translateX(-50%); }
+          }
+
+          .animate-marquee {
+            display: flex;
+            min-width: 200%;
+            animation: marquee 20s linear infinite;
+            animation-delay: 1s;
+          }
+        `}
+      </style>
+    </section>
 
       {/* Swiper Carousel */}
       <Swiper
-        modules={[Pagination, Navigation]}
-        spaceBetween={20}
-        slidesPerView={3}
-        navigation
-        pagination={{ clickable: true }}
-        breakpoints={{
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }}
-        className="mb-24"
-      >
-        {carouselItems.map((item, index) => (
-          <SwiperSlide key={index}>
-            <div className="relative group">
-              <img src={item.image} alt={item.title} className="object-cover w-full rounded-lg h-72" />
-              <div className="absolute inset-0 flex flex-col justify-end p-6 bg-black/50">
-                <p className="text-sm text-blue-400">{item.category}</p>
-                <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                <button className="mt-2 w-10 h-10 bg-blue-600 rounded-full opacity-0 group-hover:opacity-100">
-                  <ArrowRight />
-                </button>
-              </div>
+      modules={[Pagination, Navigation]}
+      spaceBetween={20}
+      slidesPerView={3}
+      navigation
+      pagination={{ clickable: true }}
+      breakpoints={{
+        640: { slidesPerView: 2 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      }}
+      className="mb-24 mt-24 px-4 md:px-8"
+    >
+      {carouselItems.map((item, index) => (
+        <SwiperSlide key={index}>
+          <div className="relative group overflow-hidden rounded-lg shadow-lg">
+            <img
+              src={item.image}
+              alt={item.title}
+              className="object-cover w-full h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96 transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-black/50 transition-opacity duration-300">
+              <p className="text-xs sm:text-sm text-blue-400">{item.category}</p>
+              <h3 className="text-sm sm:text-lg font-bold text-white">{item.title}</h3>
+              <button className="mt-2 w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <ArrowRight size={20} />
+              </button>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
     </div>
   );
 }

@@ -1,6 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef,useState, useEffect  } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { motion }from "framer-motion";
+import CountUp from "react-countup";
+import { useInView } from "react-intersection-observer";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Navigation } from "swiper/modules";
@@ -16,16 +20,17 @@ import toggle from '../assets/home/toggle.png';
 import satisfied from '../assets/home/satisfiedclient.png';
 import finish from '../assets/home/finished project.png';
 import skilled from '../assets/home/skilled experts.png';
+import media from "../assets/home/mediapost.png";
 import { FaGlobe, FaAndroid, FaApple, FaTv, FaRobot, FaClock } from "react-icons/fa";
 import { Outlet } from "react-router";
 
-
 const statsData = [
-  { img: {satisfied}, number: "6,561+", label: "Satisfied Clients" },
-  { img: {finish}, number: "600+", label: "Finished Projects" },
-  { img: {skilled}, number: "250+", label: "Skilled Experts" },
-  { img: "/images/media.png", number: "590+", label: "Media Posts" },
+  { img: satisfied, number: "6,561+", label: "Satisfied Clients" },
+  { img: finish, number: "600+", label: "Finished Projects" },
+  { img: skilled, number: "250+", label: "Skilled Experts" },
+  { img: media, number: "590+", label: "Media Posts" },
 ];
+
 const carouselItems = [
   {
     title: "Platform Integration",
@@ -53,6 +58,7 @@ const carouselItems = [
     image: image2,
   },
 ];
+
 const offerings = [
   { icon: <FaGlobe />, label: "Website" },
   { icon: <FaAndroid />, label: "Android" },
@@ -118,6 +124,7 @@ const steps = [
       link: "#",
     },
   ];
+
   const testimonials = [
     {
       name: "Suborna Tarchera",
@@ -152,6 +159,7 @@ const steps = [
   
   const Home = () => { 
     const [currentIndex, setCurrentIndex] = useState(0);
+    const { ref, inView } = useInView({ triggerOnce: true });
     useEffect(() => {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -300,12 +308,12 @@ const steps = [
     <section className="bg-gray-50 py-16 px-6">
       <div className="container mx-auto grid md:grid-cols-2 gap-10 items-center">
         {/* Left Section - Image with Play Button */}
-        <div className="relative">
-          <img
-            src={image4} 
-            alt="Team working"
-            className="rounded-lg shadow-lg"
-          />
+        <div className="relative overflow-hidden group">
+        <img
+    src={image4}
+    alt="Team working"
+    className="rounded-lg shadow-lg transform transition-transform duration-300 group-hover:scale-110"
+  />
           {/* Small Overlay Image with Play Button */}
           {/* <div className="absolute bottom-0 left-12 bg-white p-2 rounded-lg shadow-lg">
             <div className="relative">
@@ -377,12 +385,15 @@ const steps = [
       </div>
     </section>
     <section className="bg-gradient-to-r mb-24 from-blue-500 to-indigo-600 text-white max-w-7xl py-12 px-6 m-24">
-      <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center space-y-6 md:space-y-0">
+      <div ref={ref}  className="max-w-6xl mx-auto flex flex-wrap justify-between items-center space-y-6 md:space-y-0">
         {statsData.map((stat, index) => (
           <div key={index} className="flex items-center space-x-4">
+             <img src={stat.img} alt={stat.label} className="w-16 h-16 mb-2" />
             <div className="text-4xl">{stat.icon}</div>
             <div>
-              <p className="text-3xl font-bold">{stat.number}</p>
+            {inView && (
+              <CountUp start={0} end={stat.number} duration={3} className="text-3xl font-bold" />
+            )}
               <p className="text-lg">{stat.label}</p>
             </div>
           </div>
@@ -415,8 +426,6 @@ const steps = [
     </svg>
   </a>
 </div>
-
-
 
 <Swiper
   modules={[Pagination, Navigation]}
@@ -464,65 +473,71 @@ const steps = [
 </Swiper>
 
 <section>
-  {/* Main Section */}
-  <div className="relative bg-gradient-to-b py-16 mt-10 p-12 from-[#0A0F1D] to-[#05080F] text-white">
-    <div className="max-w-6xl mx-auto text-center px-4">
-      <div className="inline-flex gap-44 items-center justify-between">
-        <h2 className="text-3xl md:text-4xl font-bold mt-2">
-          Enhance And Pioneer Using Technology Trends
-        </h2>
-        <button className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-blue-500 to-indigo-600 hover:bg-blue-600 text-white rounded-lg inline-flex items-center space-x-2 transition">
-          <span>Explore More</span>
-        </button>
-      </div>
-
-      {/* Offerings Grid */}
-      <div className="mt-12 mb-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-        {offerings.map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center bg-[#111827] p-6 rounded-lg hover:bg-blue-500 transition"
-          >
-            <div className="text-3xl text-blue-400 mb-2">{item.icon}</div>
-            <span className="text-white font-semibold">{item.label}</span>
+      {/* Main Section */}
+      <div className="relative bg-gradient-to-b py-16 mt-10 px-6 md:px-12 from-[#0A0F1D] to-[#05080F] text-white">
+        <div className="max-w-6xl mx-auto text-center px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-44">
+            <h2 className="text-2xl md:text-4xl font-bold text-center md:text-left">
+              Enhance And Pioneer Using Technology Trends
+            </h2>
+            <button className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-blue-500 to-indigo-600 hover:bg-blue-600 text-white rounded-lg flex items-center space-x-2 transition">
+              <span>Explore More</span>
+            </button>
           </div>
-        ))}
-      </div>
+
+          {/* Offerings Grid */}
+          <div className="mt-12 mb-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      {offerings.map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: 50, opacity: 0 }} // Start hidden & below
+          whileInView={{ y: 0, opacity: 1 }} // Animate when in view
+          viewport={{ once: true, amount: 0.2 }} // Only animate once when 20% is visible
+          transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }} // Stagger effect
+          className="flex flex-col items-center justify-center bg-[#111827] p-6 rounded-lg hover:bg-blue-500 transition text-center"
+        >
+          <div className="text-3xl text-blue-400 mb-2">{item.icon}</div>
+          <span className="text-white font-semibold">{item.label}</span>
+        </motion.div>
+      ))}
     </div>
-  </div>
-
-  {/* Scrolling Image Section */}
-  <div className="relative -mt-10 max-w-5xl mx-auto bg-gradient-to-r from-blue-500 to-indigo-600 py-12 px-4 text-center rounded-lg shadow-lg overflow-hidden">
-    <div className="w-full overflow-hidden whitespace-nowrap">
-      <div className="flex gap-12 animate-marquee">
-        <img src="/images/tech1.png" alt="Tech 1" className="h-20 w-auto object-contain" />
-        <img src="/images/tech2.png" alt="Tech 2" className="h-20 w-auto object-contain" />
-        <img src="/images/tech3.png" alt="Tech 3" className="h-20 w-auto object-contain" />
-        <img src="/images/tech4.png" alt="Tech 4" className="h-20 w-auto object-contain" />
-        <img src="/images/tech5.png" alt="Tech 5" className="h-20 w-auto object-contain" />
-        <img src="/images/tech6.png" alt="Tech 6" className="h-20 w-auto object-contain" />
+        </div>
       </div>
-    </div>
-  </div>
 
-  {/* Tailwind Keyframes for Smooth Scrolling with Delay */}
-  <style>
-    {`
-      @keyframes marquee {
-        0% { transform: translateX(0); }
-        80% { transform: translateX(-50%); } 
-        100% { transform: translateX(-50%); }
-      }
+      {/* Scrolling Image Section */}
+      <div className="relative -mt-10 max-w-5xl mx-auto bg-gradient-to-r from-blue-500 to-indigo-600 py-8 px-4 text-center rounded-lg shadow-lg overflow-hidden">
+        <div className="w-full overflow-hidden whitespace-nowrap">
+          <div className="flex gap-12 animate-marquee">
+            {[1, 2, 3, 4, 5, 6].map((num) => (
+              <img
+                key={num}
+                src={`/images/tech${num}.png`}
+                alt={`Tech ${num}`}
+                className="h-16 md:h-20 w-auto object-contain"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
 
-      .animate-marquee {
-        display: flex;
-        min-width: 200%;
-        animation: marquee 20s linear infinite;
-        animation-delay: 1s; /* Adds 5-second pause before repeat */
-      }
-    `}
-  </style>
-</section>
+      {/* Tailwind Keyframes for Smooth Scrolling */}
+      <style>
+        {`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            80% { transform: translateX(-50%); } 
+            100% { transform: translateX(-50%); }
+          }
+
+          .animate-marquee {
+            display: flex;
+            min-width: 200%;
+            animation: marquee 20s linear infinite;
+            animation-delay: 1s;
+          }
+        `}
+      </style>
+    </section>
 
 
     
